@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="row">
+      <div class="col-sm-12 col-md-4 col-md-offset-4">
+        <form class="form-signup" method="post">
+          <h2 class="form-signin-heading">Please create an account</h2>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input class="form-control input-block" type="text" name="username" value="{{username}}">
+            <span style="color:red;">{{error_username}}</span>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" class="form-control input-block" type="password" name="password" value="{{password}}">
+            <span style="color:red;">{{error_password}}</span>
+          </div>
+          <div class="form-group">
+            <label for="verify">Verify</label>
+            <input id="verify" class="form-control input-block" type="password" name="verify" value="{{verify}}">
+            <span style="color:red;">{{error_verify}}</span>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input id="email" class="form-control input-block" type="text" name="password" value="{{email}}">
+            <span style="color:red;">{{error_email}}</span>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+          <br>
+          <span style="color:red;">{{errors_present_message}}</span>
+        </form>
+      </div>
+    </div>
+{% endblock %}

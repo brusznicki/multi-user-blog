@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-12 col-md-4 col-md-offset-4">
+      <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input class="form-control" type="text" name="username" value="{{username}}" placeholder="Username">
+        <input type="password" name="password" value="" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <div class="error">
+          {{error}}
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-12 col-md-4 col-md-offset-4">
+      <p>Don't have an account?</p>
+      <a href="/signup">Signup for one here</a>
+    </div>
+  </div>
+{% endblock %}

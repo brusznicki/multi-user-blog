@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <a href="/newpost" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> New Post</a>
+
+  <hr>
+
+  <p style="color:red">{{error}}</p>
+  <div class="post">
+    <h2 class="post-subject">{{post.subject}}</h2>
+    <p class="post-body">{{post.content}}</p>
+    <p class="post-date">Created: {{post.created.strftime('%m/%d/%Y %-I:%M %p')}}</p>
+
+    {% if post.like_count %}
+      <p>
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        &nbsp;+{{post.like_count}}
+      </p>
+    {% else %}
+      <p>
+        No likes yet. Be the first
+        <a href="/{{post.key.id()}}/like" class="btn btn-sm btn-info">
+          <span class="glyphicon glyphicon-thumbs-up"></span>
+          Like!
+        </a>
+    {% endif}
+
+    <a href="/{{post.key.id()}}/edit" class="btn btn-sm btn-default">Edit</a>
+    <a href="/{{post.key.id()}}/delete" class="btn btn-sm btn-danger">Delete</a>
+    <a href="/{{post.key.id()}}/like" class="btn btn-sm btn-info"><span class="glyphicon glyphicon-thumbs-up"></span> Like</a>
+
+    <hr>
+
+    <form method="post" action="/{{post.key.id()}}/comment" class="comment-form form-horizontal">
+      <div class="comment-content form-group">
+        <label for="content" class="col-md-1 control-label">Comment</label>
+        <div class="col-md-11">
+          <textarea name="content" class="form-control" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="form-group ">
+        <div class="col-md-offset-1 col-md-10">
+          <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+      </div>
+    </form>
+
+    {% if post.comments %}
+      <h2>Comments</h2>
+      {% for comment in post.comments %}
+        <div class="comment panel panel-default">
+          <div class="panel-body">
+            {{comment.content}}
+          </div>
+          <div class="panel-footer">
+            Author: {{comment.author}} | Created: {{comment.created.strftime('%m/%d/%Y %-I:%M %p')}}
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+{% endblock %}
