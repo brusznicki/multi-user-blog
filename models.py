@@ -5,6 +5,10 @@ from google.appengine.ext import db
 from string import letters
 
 
+def blog_key(name='default'):
+    return db.Key.from_path('blogs', name)
+
+
 def users_key(group='default'):
     return db.Key.from_path('users', group)
 

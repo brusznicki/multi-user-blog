@@ -97,20 +97,25 @@
               {{comment.content}}
             </div>
             <div class="panel-footer">
-              <strong>
-                Author: {{comment.author.username}} | Created: {{comment.created.strftime('%m/%d/%Y %-I:%M %p')}}
-              </strong>
-              {% if username == comment.author.username %}
-                <a href="/comment/{{comment.key().id()}}">
-                  Edit
-                </a>
-                <form class="display-inline" method="post" action="/comment/{{comment.key().id()}}/delete">
-                  <input type="hidden" name="remove" value="True">
-                  <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-              {% endif %}
+              <div class="row">
+                <div class="col-sm-9">
+                  <strong>
+                    Author: {{comment.author.username}} | Created: {{comment.created.strftime('%m/%d/%Y %-I:%M %p')}}
+                  </strong>
+                </div>
+                <div class="col-sm-3 text-right">
+                  {% if user.username == comment.author.username %}
+                    <a class="text-right" href="/comment/{{comment.key().id()}}">
+                      Edit
+                    </a>
+                    <form class="display-inline" method="post" action="/comment/{{comment.key().id()}}/delete">
+                      <input type="hidden" name="remove" value="True">
+                      <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
             </div>
-
           </div>
         {% endfor %}
       {% endif %}

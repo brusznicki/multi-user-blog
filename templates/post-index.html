@@ -4,7 +4,9 @@
   {% for post in posts %}
   <div class="row post-container">
     <div class="col-sm-12">
-        <h2 class="post-subject">{{post.subject}}</h2>
+        <h2 class="post-subject">
+            <a href="/{{post.key().id()}}">{{post.subject}}</a>
+        </h2>
         {% if post.likes.count() > 0 %}
             <span class="glyphicon glyphicon-thumbs-up"></span>
             &nbsp;{{post.likes.count()}} users like this

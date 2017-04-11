@@ -17,8 +17,7 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 
-
-# User Controllers
+# User Helper methods
 SECRET = "jYXhfUnFGIR0ujKdWqm6"
 
 
@@ -64,10 +63,11 @@ def check_secure_val(secure_value):
         return value
 
 
-def fetch_post_from_path(post_id):
-    key = db.Key.from_path('Post', int(post_id))
-    post = db.get(key)
-    return post
+def get_entity_from_path(entity, entity_id):
+    """get an entity from entity's id in path"""
+    key = db.Key.from_path(str(entity), int(entity_id))
+    entity = db.get(key)
+    return entity
 
 
 # Webapp2 Application Controller
@@ -110,15 +110,7 @@ class Handler(webapp2.RequestHandler):
         user_id = self.read_secure_cookie('user_id')
         self.user = user_id and User.get_by_id(int(user_id))
 
-# Blog Post controllers
-
-
-def blog_key(name='default'):
-    return db.Key.from_path('blogs', name)
-
-
-def users_key(group='default'):
-    return db.Key.from_path('users', group)
+# Blog Post Handlers
 
 
 class PostIndex(Handler):
@@ -167,7 +159,7 @@ class PostShow(Handler):
     """Get and show a specific post"""
     def get(self, post_id):
         """Display the post show page."""
-        post = fetch_post_from_path(post_id)
+        post = get_entity_from_path('Post', post_id)
         like_count = 0
         comments = ""
         user_can_edit = user_can_delete = False
@@ -200,10 +192,10 @@ class PostDelete(Handler):
         """Check permissions and delete post."""
         if not self.user:
             return self.redirect('/login')
-        post = fetch_post_from_path(post_id)
+        post = get_entity_from_path('Post', post_id)
         if self.user.key() == post.author.key():
             post.delete()
-            time.sleep(0.2)  # let Database do its thing
+            time.sleep(0.2)  # wait for db transaction
             self.redirect('/')
         else:
             self.redirect('/%s' % post.key().id())
@@ -216,7 +208,7 @@ class PostEdit(Handler):
         if not self.user:
             self.redirect('/login')
         # confirm that the user is the post author
-        post = fetch_post_from_path(post_id)
+        post = get_entity_from_path('Post', post_id)
         params = dict(subject=post.subject,
                       content=post.content,
                       post_id=post_id)
@@ -232,7 +224,7 @@ class PostEdit(Handler):
         if not self.user:
             return self.redirect('/login')
 
-        post = fetch_post_from_path(post_id)
+        post = get_entity_from_path('Post', post_id)
         if not post:
             self.error(404)
             self.redirect("/")
@@ -263,15 +255,16 @@ class PostEdit(Handler):
                 post.put()
                 self.redirect('/%s' % post.key().id())
 
+# Like Handlers
+
 
 class PostLike(Handler):
-    """Handles adding a like to a blog post"""
+    """Handles adding / removing a like to a blog post"""
     def post(self, post_id):
-        """Create like."""
+        """Create a post like assocation in db"""
         if not self.user:
             return self.redirect('/login')
-        key = db.Key.from_path('Post', int(post_id))
-        p = db.get(key)
+        p = get_entity_from_path('Post', post_id)
         author = p.author
         remove = self.request.get("remove")
         if self.user.key() == author.key():
@@ -279,25 +272,27 @@ class PostLike(Handler):
             self.redirect("/%s" % p.key().id())
         post_likes = p.likes
         post_likes_by_user = post_likes.filter('user =', self.user)
+
         if post_likes_by_user.count() > 0:
             if remove:
                 for like in post_likes_by_user:
                     db.delete(like)
-                time.sleep(0.2)
+                time.sleep(0.2)  # wait for db transaction
 
             self.redirect("/%s" % p.key().id())
         else:
             l = Like(post=p, user=self.user)
             l.put()
-            time.sleep(0.2)
+            time.sleep(0.2)  # wait for db transaction
             self.redirect("/%s" % p.key().id())
 
+
+# Comment Handlers
 
 class PostCommentNew(Handler):
     """Create a new comment for a blog post"""
     def get(self, post_id):
         # check if logged in and get username.
-
         if not self.user:
             self.redirect('/login')
         else:
@@ -305,8 +300,7 @@ class PostCommentNew(Handler):
 
     def post(self, post_id):
         """Create a comment if the user is logged in."""
-        key = db.Key.from_path('Post', int(post_id))
-        post = db.get(key)
+        post = get_entity_from_path('Post', post_id)
         if not post:
             self.error(404)
             return
@@ -314,12 +308,11 @@ class PostCommentNew(Handler):
             return self.redirect('/login')
         content = self.request.get('comment-content')
         if content:
-            # create the comment
             c = Comment(author=self.user,
                         content=content,
                         post=post)
             c.put()
-            time.sleep(0.2)  # rest for db job to finish
+            time.sleep(0.2)  # wait for db transaction
             return self.redirect('/%s' % post.key().id())
 
 
@@ -330,8 +323,7 @@ class CommentEdit(Handler):
         if not self.user:
             self.redirect('/login')
         # confirm that the user is the comment author
-        key = db.Key.from_path('Comment', int(comment_id))
-        comment = db.get(key)
+        comment = get_entity_from_path('Comment', comment_id)
         post = comment.post
         content = comment.content
         if comment.author.key() != self.user.key():
@@ -347,8 +339,7 @@ class CommentEdit(Handler):
         if not self.user:
             self.redirect('/login')
         # confirm that the user is the comment author
-        key = db.Key.from_path('Comment', int(comment_id))
-        comment = db.get(key)
+        comment = get_entity_from_path('Comment', comment_id)
 
         if comment.author.key() != self.user.key():
             self.redirect('/%s' % comment.post.key().id())
@@ -362,7 +353,7 @@ class CommentEdit(Handler):
         if content and comment.content != content:
             comment.content = content
             comment.put()
-            time.sleep(0.2)
+            time.sleep(0.2)  # wait for db transaction
             self.redirect('/%s' % post.key().id())
         else:
             have_error = True
@@ -380,13 +371,14 @@ class CommentDelete(Handler):
         """Check permissions and delete post."""
         if not self.user:
             return self.redirect('/login')
-        key = db.Key.from_path('Comment', int(comment_id))
-        comment = db.get(key)
+        comment = get_entity_from_path('Comment', comment_id)
         post = comment.post
         if self.user.key() == comment.author.key():
             comment.delete()
-            time.sleep(0.2)  # let Database do its thing
+            time.sleep(0.2)  # wait for db transaction
         self.redirect('/%s' % post.key().id())
+
+# User Authorization and Sign in Handlers
 
 
 class Signup(Handler):
