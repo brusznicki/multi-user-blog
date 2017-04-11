@@ -118,7 +118,7 @@ class PostIndex(Handler):
     def get(self):
         """Show 10 posts."""
         posts = Post.all().order('-created').run(limit=10)
-        self.render('post-index.html',
+        return self.render('post-index.html',
                     posts=posts,
                     user=self.user)
 
@@ -130,7 +130,7 @@ class PostNew(Handler):
         if not self.user:
             return self.redirect('/login')
 
-        self.render('post-new.html')
+        return self.render('post-new.html')
 
     def post(self):
         """Attempt to post the form data to server"""
@@ -145,11 +145,11 @@ class PostNew(Handler):
                      content=content,
                      author=self.user)
             p.put()
-            self.redirect("/%s" % p.key().id())
+            return self.redirect("/%s" % p.key().id())
         else:
 
             error = "subject and content, please!"
-            self.render("newpost.html",
+            return self.render("newpost.html",
                         subject=subject,
                         content=content,
                         error=error)
@@ -173,7 +173,7 @@ class PostShow(Handler):
                       user_can_like=user_can_like)
         if not post:
             self.error(404)
-            self.redirect('/')
+            return self.redirect('/')
         author = post.author
         if author.key().id() == self.user.key().id():
             params['user_can_edit'] = True
@@ -183,7 +183,7 @@ class PostShow(Handler):
             params['already_liked_this'] = True
         params['like_count'] = post.likes.count()
         params['comments'] = post.comments.order('-created')
-        self.render('post-show.html', **params)
+        return self.render('post-show.html', **params)
 
 
 class PostDelete(Handler):
@@ -206,7 +206,7 @@ class PostEdit(Handler):
     def get(self, post_id):
         """Check permissions and display post edit form."""
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
         # confirm that the user is the post author
         post = get_entity_from_path('Post', post_id)
         params = dict(subject=post.subject,
@@ -214,9 +214,9 @@ class PostEdit(Handler):
                       post_id=post_id)
 
         if self.user.key() == post.author.key():
-            self.render('post-edit.html', **params)
+            return self.render('post-edit.html', **params)
         else:
-            self.redirect('%s' % post_id)
+            return self.redirect('%s' % post_id)
 
     def post(self, post_id):
         """Save the edited post."""
@@ -227,7 +227,9 @@ class PostEdit(Handler):
         post = get_entity_from_path('Post', post_id)
         if not post:
             self.error(404)
-            self.redirect("/")
+            return self.redirect("/")
+        if self.user.key() != post.author.key():
+            return self.redirect('/%s' % post_id)
         else:
             subject = self.request.get('subject')
             content = self.request.get('content')
@@ -253,7 +255,7 @@ class PostEdit(Handler):
                 post.content = content
                 post.subject = subject
                 post.put()
-                self.redirect('/%s' % post.key().id())
+                return self.redirect('/%s' % post.key().id())
 
 # Like Handlers
 
@@ -269,7 +271,8 @@ class PostLike(Handler):
         remove = self.request.get("remove")
         if self.user.key() == author.key():
             self.write("you can't like your own post")
-            self.redirect("/%s" % p.key().id())
+            return self.redirect("/%s" % p.key().id())
+
         post_likes = p.likes
         post_likes_by_user = post_likes.filter('user =', self.user)
 
@@ -284,7 +287,8 @@ class PostLike(Handler):
             l = Like(post=p, user=self.user)
             l.put()
             time.sleep(0.2)  # wait for db transaction
-            self.redirect("/%s" % p.key().id())
+            return self.redirect("/%s" % p.key().id())
+
 
 
 # Comment Handlers
@@ -294,9 +298,10 @@ class PostCommentNew(Handler):
     def get(self, post_id):
         # check if logged in and get username.
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
+
         else:
-            self.render('new-comment.html', post_id=post_id)
+            return self.render('new-comment.html', post_id=post_id)
 
     def post(self, post_id):
         """Create a comment if the user is logged in."""
@@ -321,28 +326,28 @@ class CommentEdit(Handler):
     def get(self, comment_id):
         """Check permissions and display post edit form."""
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
         # confirm that the user is the comment author
         comment = get_entity_from_path('Comment', comment_id)
         post = comment.post
         content = comment.content
         if comment.author.key() != self.user.key():
-            self.redirect('/%s' % post.key().id())
+            return self.redirect('/%s' % post.key().id())
         else:
-            self.render("comment-edit.html",
-                        content=content,
-                        post=post)
+            return self.render("comment-edit.html",
+                               content=content,
+                               post=post)
 
     def post(self, comment_id):
         """Check permissions and display post edit form."""
         have_error = False
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
         # confirm that the user is the comment author
         comment = get_entity_from_path('Comment', comment_id)
 
         if comment.author.key() != self.user.key():
-            self.redirect('/%s' % comment.post.key().id())
+            return self.redirect('/%s' % comment.post.key().id())
 
         post = comment.post
         content = self.request.get('content')
@@ -354,7 +359,7 @@ class CommentEdit(Handler):
             comment.content = content
             comment.put()
             time.sleep(0.2)  # wait for db transaction
-            self.redirect('/%s' % post.key().id())
+            return self.redirect('/%s' % post.key().id())
         else:
             have_error = True
             params['error'] = "Please update your comment or cancel"
@@ -362,7 +367,7 @@ class CommentEdit(Handler):
             have_error = True
             params['error'] = "Comment can't be blank"
         if have_error:
-            self.render("comment-edit.html", **params)
+            return self.render("comment-edit.html", **params)
 
 
 class CommentDelete(Handler):
@@ -376,7 +381,7 @@ class CommentDelete(Handler):
         if self.user.key() == comment.author.key():
             comment.delete()
             time.sleep(0.2)  # wait for db transaction
-        self.redirect('/%s' % post.key().id())
+        return self.redirect('/%s' % post.key().id())
 
 # User Authorization and Sign in Handlers
 
@@ -385,7 +390,7 @@ class Signup(Handler):
     """Handles sign up flow for the user"""
     def get(self):
         """Display the signup form."""
-        self.render('signup-form.html')
+        return self.render('signup-form.html')
 
     def post(self):
         """Create the user if info is valid, then log them in."""
@@ -419,7 +424,7 @@ class Signup(Handler):
             have_error = True
 
         if have_error:
-            self.render('signup-form.html', **params)
+            return self.render('signup-form.html', **params)
 
         else:
             pw_hash = make_pw_hash(username, password)
@@ -428,14 +433,14 @@ class Signup(Handler):
                      email=email)
             u.put()
             self.login(u)
-            self.redirect('/')
+            return self.redirect('/')
 
 
 class Login(Handler):
     """Authorizes and logs in the user"""
     def get(self):
         """Display the login form"""
-        self.render('login-form.html')
+        return self.render('login-form.html')
 
     def post(self):
         """Login the user, setting a secure cookie 'user_id'."""
@@ -446,10 +451,10 @@ class Login(Handler):
         if u:
 
             self.login(u)
-            self.redirect('/')
+            return self.redirect('/')
         else:
             error = 'Invalid Credentials'
-            self.render('login-form.html', error=error, username=username)
+            return self.render('login-form.html', error=error, username=username)
 
 
 class Logout(Handler):
@@ -457,7 +462,7 @@ class Logout(Handler):
     def get(self):
         """Logout the user, erasing the user_id cookie"""
         self.response.set_cookie('user_id', '')
-        self.redirect('/login')
+        return self.redirect('/login')
 
 
 # routes
