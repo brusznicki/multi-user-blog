@@ -10,12 +10,10 @@
     </div>
 
     <div class="col-sm-12 col-md-2 col-md-offset-2 text-right">
-      {% if user_can_edit %}
+      {% if user and user.key() == post.author.key() %}
         <a href="/{{post.key().id()}}/edit">
           Edit
         </a>
-      {% endif %}
-      {% if user_can_delete %}
         <form class="display-inline" method="post" action="/{{post.key().id()}}/delete">
           <input type="hidden" name="remove" value="True">
           <button type="submit" class="btn btn-sm btn-danger">Delete</button>
@@ -30,44 +28,13 @@
           {{post.author.username}} on {{post.created.strftime('%m/%d/%Y %-I:%M %p')}}
         </strong>
       </p>
-      {% if like_count > 0 %}
-
+      {% if post.likes.count() > 0 %}
         <span class="glyphicon glyphicon-thumbs-up"></span>
-        &nbsp;{{like_count}} users like this
-
-        {% if user_can_like %}
-
-          {% if already_liked_this %}
-            <span>You like this!</span>
-            <form method="post" style="display-inline" action="/{{post.key().id()}}/like">
-              <input type="hidden" name="remove" value="True">
-              <button type="submit" class="btn btn-danger">
-                <span class="glyphicon glyphicon-thumbs-up"></span>
-                Unlike this post
-              </button>
-            </form>
-          {% else %}
-            <form method="post" style="display-inline" action="/{{post.key().id()}}/like">
-              <button type="submit" class="btn btn-info">
-                <span class="glyphicon glyphicon-thumbs-up"></span>
-                Like this post
-              </button>
-            </form>
-          {% endif %}
-
-        {% endif %}
-
+        &nbsp;{{post.likes.count()}} users like this
+        {% include "like-form.html" %}
       {% else %}
         No likes yet.
-        {% if user_can_like %}
-          <form method="post" style="display-inline" action="/{{post.key().id()}}/like">
-            <button type="submit" class="btn btn-info">
-              <span class="glyphicon glyphicon-thumbs-up"></span>
-              Like this Post
-            </button>
-          </form>
-        {% endif %}
-
+        {% include "like-form.html" %}
       {% endif %}
     </div>
 
@@ -104,7 +71,7 @@
                   </strong>
                 </div>
                 <div class="col-sm-3 text-right">
-                  {% if user.username == comment.author.username %}
+                  {% if user and user.username == comment.author.username %}
                     <a class="text-right" href="/comment/{{comment.key().id()}}">
                       Edit
                     </a>

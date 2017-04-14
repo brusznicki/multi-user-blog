@@ -1,0 +1,22 @@
+
+<form class="form-group" method="post" style="display-inline" action="/{{post.key().id()}}/like">
+  {% if user and post.author.key() != user.key() %}
+    {% if liked %}
+      <input type="hidden" name="remove" value="True">
+      <button type="submit" class="from-control btn btn-danger">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        Unlike
+    {% else %}
+      <button type="submit" class="btn btn-info">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        Like
+    {% endif %}
+
+  {% endif %}
+  {% if not user %}
+      <button type="submit" class="btn btn-info">
+        <span class="glyphicon glyphicon-thumbs-up"></span>
+        Like
+  {% endif %}
+  </button>
+</form>
