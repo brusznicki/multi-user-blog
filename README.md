@@ -47,11 +47,10 @@ Navigate to [localhost:8080](http://localhost:8080) to view the application.
 
 `mublog` needs some love if it will ever compete with the likes of [Wordpress](http://www.wordpress.com) Here are those features listed by order of importance, most important first:
 
-1. DevOps
-* Write basic tests
-** models including their validations and assocations
-** handlers to ensure that expected permissions and behaviors are observed
-** select and install a continuous integration tool [https://en.wikipedia.org/wiki/Continuous_integration](https://en.wikipedia.org/wiki/Continuous_integration). (I am partial to [Codeship](https://codeship.com/))
+1. DevOps / Tests
+* models including their validations and assocations
+* handlers to ensure that expected permissions and behaviors are observed
+* select and install a continuous integration tool [https://en.wikipedia.org/wiki/Continuous_integration](https://en.wikipedia.org/wiki/Continuous_integration). (I am partial to [Codeship](https://codeship.com/))
 2. User controls
 * Admin screen to control users
 * User roles (admin, poster, reader)
@@ -69,5 +68,5 @@ Navigate to [localhost:8080](http://localhost:8080) to view the application.
 ### License
 
 `mublog` is a public domain work, dedicated using the
-[MIT License](https://opensource.org/licenses/MIT). See LICENSE.md for more details.
+[MIT License](https://opensource.org/licenses/MIT). See [LICENSE.md](https://github.com/brusznicki/multi-user-blog/blob/master/LICENSE.md) for more details.
 
