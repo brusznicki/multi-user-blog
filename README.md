@@ -1,5 +1,6 @@
 # MuBlog
 
+![Screenshot of mublog](http://i.imgur.com/Vy97Scs.png "we never said it was pretty")
 [mublog](https://github.com/brusznicki/multi-user-blog) is an educational project for the [Udacity](https://www.udacity.com) Full Stack developer course. I build this project with my daughter to help her learn about code and blogging. The app runs on [Google Cloud](http://cloud.google.com) and [Google App Engine](https://cloud.google.com/appengine/)
 
 Author: Chris Brusznicki
@@ -35,6 +36,11 @@ Navigate to [localhost:8080](http://localhost:8080) to view the application.
 2. Create your account
 3. From there create a post by clicking "new post" also found on the top right of the main page.
 4. Rejoice in the simple `mublog` greatness
+
+### Other stuff you should know
+
+1. The front end here is a bit of an afterthought. Most of the markup and styling is done with [Twitter Boostrap](http://www.getbootstrap.com)'s grid system and base styles.
+2. We chose the DB vs. NDB client library because that's what was used in the Udacity 253. [This page](https://cloud.google.com/appengine/docs/standard/python/ndb/db_to_ndb) would be helpful when converting to NDB.
 
 # Caveats
 
