@@ -21,16 +21,14 @@ git clone git@github.com:brusznicki/multi-user-blog.git your-directory EXAMPLE-F
 ```
 * (Optional) Setup [deploying to gcloud](https://cloud.google.com/sdk/gcloud/reference/app/deploy)
 * Launch the development server
-
-#### Launch app locally
 ```
 ~ dev_appserver.py app.yaml
 ```
-#### Deploy to gcloud
+* Deploy to gcloud
 ```
 ~ gcloud app deploy app.yaml --project udacity-blog-v2
 ```
-Navigate to [localhost:8080](http://localhost:8080) to view the application.
+* Navigate to [localhost:8080](http://localhost:8080) to view the application.
 
 `Pro-tip` You can view your [datastore](https://cloud.google.com/datastore/docs/datastore-api-tutorial) at [localhost:8000/datastore](http://localhost:8000/datastore). If you need to do caveman debugging the datastore will be superhelpful.
 
