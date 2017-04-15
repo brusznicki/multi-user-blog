@@ -1,5 +1,5 @@
 import time
-from helpers import Handler, user_owns_post, post_exists
+from helpers import Handler, post_exists, user_owns_post
 
 
 class PostEditHandler(Handler):
@@ -37,7 +37,7 @@ class PostEditHandler(Handler):
 
         if have_error:
             params['error_msg'] = "Please correct the errors on this page"
-            self.render("post-edit.html", **params)
+            return self.render("post-edit.html", **params)
         else:
             post.content = content
             post.subject = subject

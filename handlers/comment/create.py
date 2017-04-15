@@ -5,6 +5,7 @@ from models.comment import Comment
 
 class CommentNewHandler(Handler):
     """Create a new comment for a blog post"""
+
     @post_exists
     def post(self, post_id, post):
         """Create a comment if the user is logged in."""

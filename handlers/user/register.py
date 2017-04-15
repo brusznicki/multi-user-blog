@@ -3,6 +3,7 @@ from helpers import auth
 
 from models import User
 
+
 class RegisterHandler(Handler):
     """Handles sign up flow for the user"""
     def get(self):

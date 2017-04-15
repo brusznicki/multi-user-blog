@@ -3,7 +3,7 @@ from google.appengine.ext import db
 
 
 def user_owns_comment(function):
-    """Check that post exists and return error 403 if user owns post"""
+    """Check that user owns comment"""
     @wraps(function)
     def wrapper(self, comment_id, comment):
         if not comment:

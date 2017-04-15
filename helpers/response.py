@@ -4,7 +4,6 @@ import webapp2
 import auth
 
 from models import User
-from google.appengine.ext import db
 template_dir = os.path.join(os.getcwd(), 'templates/')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)

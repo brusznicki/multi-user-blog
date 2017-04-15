@@ -11,7 +11,7 @@ class PostLikeHandler(Handler):
         """Create a post like assocation in db"""
 
         if post.author.key() == self.user.key():
-            self.error(403)
+            self.error(403)  # user can't like his own post
             return self.redirect('/%s' % post_id)
         else:
             remove = self.request.get("remove")

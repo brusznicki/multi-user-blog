@@ -22,8 +22,8 @@ class PostNewHandler(Handler):
 
         if subject and content:
             post = Post(subject=subject,
-                     content=content,
-                     author=self.user)
+                        content=content,
+                        author=self.user)
             post.put()
             return self.redirect("/%s" % post.key().id())
         else:

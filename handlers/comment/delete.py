@@ -9,7 +9,7 @@ class CommentDeleteHandler(Handler):
     @user_owns_comment
     def post(self, comment_id, comment, user):
         """Check permissions and delete post."""
-        post_id = comment.post.key().id()
+        post_id = comment.post.key().id()  # get post id for redirect
         comment.delete()
         time.sleep(0.2)  # wait for db transaction
         return self.redirect('/%s' % post_id)
