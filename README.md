@@ -16,6 +16,9 @@ Author: Chris Brusznicki
 * Install the [Google App Engine for Python](https://cloud.google.com/appengine/downloads)
 ![Get the Python version](http://i.imgur.com/Y29MNjT.png "Python is what you want")
 * Clone this repository to your development environment
+```
+git clone git@github.com:brusznicki/multi-user-blog.git your-directory EXAMPLE-FOLDER
+```
 * (Optional) Setup [deploying to gcloud](https://cloud.google.com/sdk/gcloud/reference/app/deploy)
 * Launch the development server
 
@@ -25,7 +28,7 @@ Author: Chris Brusznicki
 ```
 #### Deploy to gcloud
 ```
-~ glcoud app deploy app.yaml --project udacity-blog-v2
+~ gcloud app deploy app.yaml --project udacity-blog-v2
 ```
 Navigate to [localhost:8080](http://localhost:8080) to view the application.
 
