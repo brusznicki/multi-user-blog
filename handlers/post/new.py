@@ -1,22 +1,18 @@
 from models import Post
-from helpers import Handler
+from helpers import Handler, user_logged_in
 
 
 class PostNewHandler(Handler):
     """Create a new post via POST"""
 
+    @user_logged_in
     def get(self):
         """Gets and displays the create form"""
-        if not self.user:
-            return self.redirect('/login')
-
         return self.render('post-new.html')
 
+    @user_logged_in
     def post(self):
         """Attempt to post the form data to server"""
-        if not self.user:
-            return self.redirect('/login')
-
         subject = self.request.get('subject')
         content = self.request.get('content')
 

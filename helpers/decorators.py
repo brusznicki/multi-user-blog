@@ -2,6 +2,18 @@ from functools import wraps
 from google.appengine.ext import db
 
 
+def user_logged_in(function):
+    """checks whether user is logged in"""
+    @wraps(function)
+    def wrapper(self):
+        if not self.user:
+            self.error(403)
+            return self.redirect("/")
+        else:
+            return function(self)
+    return wrapper
+
+
 def user_owns_comment(function):
     """Check that user owns comment"""
     @wraps(function)
