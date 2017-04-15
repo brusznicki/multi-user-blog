@@ -12,7 +12,7 @@ Author: Chris Brusznicki
 
 * Install the [Google Cloud SDK](https://cloud.google.com/sdk/downloads)
 * Install the [Google App Engine for Python](https://cloud.google.com/appengine/downloads)
-![Get the Python version](http://imgur.com/Y29MNjT "Python is what you want")
+![Get the Python version](http://i.imgur.com/Y29MNjT.png "Python is what you want")
 * Clone this repository to your development environment
 * (Optional) Setup [deploying to gcloud](https://cloud.google.com/sdk/gcloud/reference/app/deploy)
 * Launch the development server
