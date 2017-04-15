@@ -40,8 +40,41 @@ Navigate to [localhost:8080](http://localhost:8080) to view the application.
 
 ### Educational purposes only
 
-* `mublog` was created for educational purposes. Core features must be improved before `mublog` can be considered a production level product. For example, there are no tests for this product so continues integration will be murky from here on out. These issues are outlined in future improvements below.
+`mublog` was created for educational purposes. Core features must be improved before `mublog` can be considered a production level product. For example, there are no tests for this product so continues integration will be murky from here on out. These issues are outlined in future improvements below.
 
+### Things we learnt
+
+[Python Decorators](https://wiki.python.org/moin/DecoratorPattern) are pretty helpful but we're still new to them. We found these resources helpful:
+
+* [Codeship on Python decorators](http://thecodeship.com/patterns/guide-to-python-function-decorators/)
+* [Tutoral invovling built in Django decorators](http://scottlobdell.me/2015/04/decorators-arguments-python/)
+
+In the future we need to figure out how to elegantly match up the parameters consumed and passed by the wrapping / wrapped functions. See this psuedo code for example:
+
+```
+def user_is_god(function):
+    """returns user if user is in fact god"""
+    @wraps(function)
+    def wrapper(self, some_param_needed_by_wrapped_function)
+        user = self.user
+        if self.user == God:
+            return function(self,
+                            some_param_needed_by_wrapped_function,
+                            user)
+        else:
+            self.error(403)
+            return self.redirect("/")
+
+
+def some_func(self):
+    """
+    @user_is_god
+    def get(self, some_param_needed_by_wrapped_function, user):
+        # does some cool stuff
+        return
+```
+
+It seems clunky to have to match the params in this manner and I feel like I'm missing something about the enclosing scope. You can see implementation of this pattern in [decorators.py](https://github.com/brusznicki/multi-user-blog/blob/master/helpers/decorators.py) and [delete.py](https://github.com/brusznicki/multi-user-blog/blob/master/handlers/comment/delete.py). Feedback is welcome!
 
 ### Future improvements
 
@@ -51,6 +84,7 @@ Navigate to [localhost:8080](http://localhost:8080) to view the application.
 * models including their validations and assocations
 * handlers to ensure that expected permissions and behaviors are observed
 * select and install a continuous integration tool [https://en.wikipedia.org/wiki/Continuous_integration](https://en.wikipedia.org/wiki/Continuous_integration). (I am partial to [Codeship](https://codeship.com/))
+* Consider installing [Flask](http://flask.pocoo.org/) to speed up the above items
 2. User controls
 * Admin screen to control users
 * User roles (admin, poster, reader)
