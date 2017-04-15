@@ -65,7 +65,7 @@ def user_owns_post(function):
 def comment_exists(function):
     @wraps(function)
     def wrapper(self, comment_id):
-        key = db.Key.from_path('Comment', int(comment_id))
+        key = db.Key.from_path("Comment", int(comment_id))
         comment = db.get(key)
         if comment:
             return function(self,
@@ -80,7 +80,7 @@ def comment_exists(function):
 def post_exists(function):
     @wraps(function)
     def wrapper(self, post_id):
-        key = db.Key.from_path('Post', int(post_id))
+        key = db.Key.from_path("Post", int(post_id))
         post = db.get(key)
         if post:
             return function(self,

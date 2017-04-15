@@ -30,23 +30,23 @@ def valid_email(email):
 
 def make_salt(length=5):
     """Create a random salt."""
-    return ''.join(random.choice(letters) for x in range(length))
+    return "".join(random.choice(letters) for x in range(length))
 
 
 def make_pw_hash(username, password, salt=None):
     """Hash password."""
     salt = salt or make_salt()
     h = hashlib.sha256(username + password + salt).hexdigest()
-    return '%s,%s' % (salt, h)
+    return "%s,%s" % (salt, h)
 
 
 def make_secure_val(value):
     """Create a secure value"""
-    return '%s|%s' % (value, hmac.new(SECRET, value).hexdigest())
+    return "%s|%s" % (value, hmac.new(SECRET, value).hexdigest())
 
 
 def check_secure_val(secure_value):
     """Confirm the cookie value matches its hash, if so, return the value."""
-    value = secure_value.split('|')[0]
+    value = secure_value.split("|")[0]
     if secure_value == make_secure_val(value):
         return value

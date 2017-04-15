@@ -17,4 +17,4 @@ class PostDeleteHandler(Handler):
             like.delete()  # delete the likes
         post.delete()  # finally, delete the post
         time.sleep(0.2)  # wait for db transaction
-        return self.redirect('/')
+        return self.redirect("/")

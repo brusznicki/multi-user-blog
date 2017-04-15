@@ -10,12 +10,12 @@ class CommentNewHandler(Handler):
     def post(self, post_id, post):
         """Create a comment if the user is logged in."""
         if not self.user:
-            return self.redirect('/login')
-        content = self.request.get('comment-content')
+            return self.redirect("/login")
+        content = self.request.get("comment-content")
         if content:
             c = Comment(author=self.user,
                         content=content,
                         post=post)
             c.put()
             time.sleep(0.2)  # wait for db transaction
-        return self.redirect('/%s' % post.key().id())
+        return self.redirect("/%s" % post.key().id())

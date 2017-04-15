@@ -39,8 +39,10 @@ Navigate to [localhost:8080](http://localhost:8080) to view the application.
 
 ### Other stuff you should know
 
+1. Built with Python 2.7. See [app.yaml](https://github.com/brusznicki/multi-user-blog/blob/master/app.yaml) for more details
 1. The front end here is a bit of an afterthought. Most of the markup and styling is done with [Twitter Boostrap](http://www.getbootstrap.com)'s grid system and base styles.
 2. We chose the DB vs. NDB client library because that's what was used in the Udacity 253. [This page](https://cloud.google.com/appengine/docs/standard/python/ndb/db_to_ndb) would be helpful when converting to NDB.
+3. Our production datastore and server had trouble until we created an [index.yaml](https://github.com/brusznicki/multi-user-blog/blob/master/index.yaml). If your server is mysteriously failing check your [logs](https://cloud.google.com/appengine/docs/standard/python/logs/)
 
 # Caveats
 
@@ -103,7 +105,11 @@ It seems clunky to have to match the params in this manner and I feel like I'm m
 4. Integrate a front end framework such as [React](https://reactjs.net/)
 * Modularize each component in the app
 * Support themes
-
+5. Post handler / model
+* Index only displays last 10, add pagination
+* Add search
+* Add Sort
+* add index by author
 
 ### License
 

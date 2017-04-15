@@ -4,7 +4,7 @@ import webapp2
 import auth
 
 from models import User
-template_dir = os.path.join(os.getcwd(), 'templates/')
+template_dir = os.path.join(os.getcwd(), "templates/")
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
 
@@ -36,12 +36,12 @@ class Handler(webapp2.RequestHandler):
             return auth.check_secure_val(cookie_val)
 
     def login(self, user):
-        """Set a secure cookie with the user's id."""
+        """Set a secure cookie with the user"s id."""
         user_id = user.key().id()
-        self.set_secure_cookie('user_id', str(user_id))
+        self.set_secure_cookie("user_id", str(user_id))
 
     def initialize(self, *a, **kw):
         """Invoked everytime app loads. If a user, assign to self.user"""
         webapp2.RequestHandler.initialize(self, *a, **kw)
-        user_id = self.read_secure_cookie('user_id')
+        user_id = self.read_secure_cookie("user_id")
         self.user = user_id and User.get_by_id(int(user_id))

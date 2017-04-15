@@ -8,13 +8,14 @@ class PostNewHandler(Handler):
     @user_logged_in
     def get(self):
         """Gets and displays the create form"""
-        return self.render('post-new.html')
+        user = self.user
+        return self.render("post-new.html", user=user)
 
     @user_logged_in
     def post(self):
         """Attempt to post the form data to server"""
-        subject = self.request.get('subject')
-        content = self.request.get('content')
+        subject = self.request.get("subject")
+        content = self.request.get("content")
 
         if subject and content:
             post = Post(subject=subject,

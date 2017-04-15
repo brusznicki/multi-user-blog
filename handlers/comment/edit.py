@@ -21,7 +21,7 @@ class CommentEditHandler(Handler):
         """Check permissions and display post edit form."""
         have_error = False
         post = comment.post
-        content = self.request.get('content')
+        content = self.request.get("content")
         params = dict(content=content,
                       post=post,
                       user=self.user)
@@ -30,12 +30,12 @@ class CommentEditHandler(Handler):
             comment.content = content
             comment.put()
             time.sleep(0.2)  # wait for db transaction
-            return self.redirect('/%s' % post.key().id())
+            return self.redirect("/%s" % post.key().id())
         else:
             have_error = True
-            params['error'] = "Please update your comment or cancel"
+            params["error"] = "Please update your comment or cancel"
         if not content:
             have_error = True
-            params['error'] = "Comment can't be blank"
+            params["error"] = "Comment can't be blank"
         if have_error:
             return self.render("comment-edit.html", **params)
