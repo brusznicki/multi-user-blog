@@ -1,10 +1,11 @@
 import time
-from helpers import Handler, comment_exists, user_owns_comment
+from helpers import Handler, comment_exists, user_logged_in, user_owns_comment
 
 
 class CommentDeleteHandler(Handler):
     """Handles comment delete requests"""
 
+    @user_logged_in
     @comment_exists
     @user_owns_comment
     def post(self, comment_id, comment, user):

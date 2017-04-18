@@ -1,9 +1,9 @@
 # MuBlog
 
 ![Screenshot of mublog](http://i.imgur.com/Vy97Scs.png "we never said it was pretty")
-[mublog](https://github.com/brusznicki/multi-user-blog) is an educational project for the [Udacity](https://www.udacity.com) Full Stack developer course. I build this project with my daughter to help her learn about code and blogging. The app runs on [Google Cloud](http://cloud.google.com) and [Google App Engine](https://cloud.google.com/appengine/)
+[mublog](https://github.com/brusznicki/multi-user-blog) is an educational project for the [Udacity](https://www.udacity.com) Full Stack developer course. I built this project with my daughter Evelyn to help her learn about coding and blogging. The app runs on [Google Cloud](http://cloud.google.com) and [Google App Engine](https://cloud.google.com/appengine/)
 
-Author: Chris Brusznicki
+Author: [Chris Brusznicki](https://github.com/brusznicki)
 
 [Production(ish) mublog running on Google App Engine](https://udacity-blog-v2.appspot.com/)
 
@@ -42,9 +42,10 @@ git clone git@github.com:brusznicki/multi-user-blog.git your-directory EXAMPLE-F
 ### Other stuff you should know
 
 1. See [app.yaml](https://github.com/brusznicki/multi-user-blog/blob/master/app.yaml) for more configuration details
-1. The front end here is a bit of an afterthought. Most of the markup and styling is done with [Twitter Boostrap](http://www.getbootstrap.com)'s grid system and base styles.
-2. We chose the DB vs. NDB client library because that's what was used in the Udacity 253. [This page](https://cloud.google.com/appengine/docs/standard/python/ndb/db_to_ndb) would be helpful when converting to NDB.
-3. Our production datastore and server had trouble until we created an [index.yaml](https://github.com/brusznicki/multi-user-blog/blob/master/index.yaml). If your server is mysteriously failing check your [logs](https://cloud.google.com/appengine/docs/standard/python/logs/)
+2. The front end here is a bit of an afterthought. The markup and styling are done with [Twitter Boostrap](http://www.getbootstrap.com)'s grid system and base styles.
+3. We use [Jinja2](http://jinja.pocoo.org/docs/2.9/) templates to quickly build our views.
+4. We chose the DB vs. NDB client library because that's what was used in the Udacity 253. [This page](https://cloud.google.com/appengine/docs/standard/python/ndb/db_to_ndb) would be helpful when converting to NDB.
+5. Our production datastore and server had trouble until we created an [index.yaml](https://github.com/brusznicki/multi-user-blog/blob/master/index.yaml). If your server is mysteriously failing check your [logs](https://cloud.google.com/appengine/docs/standard/python/logs/)
 
 # Caveats
 
@@ -58,33 +59,6 @@ git clone git@github.com:brusznicki/multi-user-blog.git your-directory EXAMPLE-F
 
 * [Codeship on Python decorators](http://thecodeship.com/patterns/guide-to-python-function-decorators/)
 * [Tutoral invovling built in Django decorators](http://scottlobdell.me/2015/04/decorators-arguments-python/)
-
-In the future we need to figure out how to elegantly match up the parameters consumed and passed by the wrapping / wrapped functions. See this psuedo code for example:
-
-```
-def user_is_god(function):
-    """returns user if user is in fact god"""
-    @wraps(function)
-    def wrapper(self, some_param_needed_by_wrapped_function)
-        user = self.user
-        if self.user == God:
-            return function(self,
-                            some_param_needed_by_wrapped_function,
-                            user)
-        else:
-            self.error(403)
-            return self.redirect("/")
-
-
-def some_func(self):
-    """
-    @user_is_god
-    def get(self, some_param_needed_by_wrapped_function, user):
-        # does some cool stuff
-        return
-```
-
-It seems clunky to have to match the params in this manner and I feel like I'm missing something about the enclosing scope. You can see implementation of this pattern in [decorators.py](https://github.com/brusznicki/multi-user-blog/blob/master/helpers/decorators.py) and [delete.py](https://github.com/brusznicki/multi-user-blog/blob/master/handlers/comment/delete.py). Feedback is welcome!
 
 ### Future improvements
 

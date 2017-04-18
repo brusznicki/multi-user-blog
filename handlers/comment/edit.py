@@ -1,10 +1,11 @@
 import time
-from helpers import Handler, comment_exists, user_owns_comment
+from helpers import Handler, comment_exists, user_logged_in, user_owns_comment
 
 
 class CommentEditHandler(Handler):
     """Handles editing of a comment"""
 
+    @user_logged_in
     @comment_exists
     @user_owns_comment
     def get(self, comment_id, comment, user):
@@ -15,6 +16,7 @@ class CommentEditHandler(Handler):
                            content=content,
                            post=post)
 
+    @user_logged_in
     @comment_exists
     @user_owns_comment
     def post(self, comment_id, comment, user):

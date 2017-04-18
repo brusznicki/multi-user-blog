@@ -1,10 +1,11 @@
 import time
-from helpers import Handler, user_owns_post, post_exists
+from helpers import Handler, post_exists, user_logged_in, user_owns_post
 
 
 class PostDeleteHandler(Handler):
     """Handles delete requests"""
 
+    @user_logged_in
     @post_exists
     @user_owns_post
     def post(self, post_id, post=None, user=None):

@@ -1,13 +1,15 @@
 import time
-from helpers import Handler, post_exists
+from helpers import Handler, post_exists, user_logged_in
 from google.appengine.ext import db
 from models.like import Like
 
 
 class PostLikeHandler(Handler):
     """Handles adding / removing a like to a blog post"""
+
+    @user_logged_in
     @post_exists
-    def post(self, post_id, post):
+    def post(self, post_id, post, user):
         """Create a post like assocation in db"""
 
         if post.author.key() == self.user.key():

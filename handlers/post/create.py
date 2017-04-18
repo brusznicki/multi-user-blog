@@ -6,13 +6,12 @@ class PostNewHandler(Handler):
     """Create a new post via POST"""
 
     @user_logged_in
-    def get(self):
+    def get(self, user):
         """Gets and displays the create form"""
-        user = self.user
         return self.render("post-new.html", user=user)
 
     @user_logged_in
-    def post(self):
+    def post(self, user):
         """Attempt to post the form data to server"""
         subject = self.request.get("subject")
         content = self.request.get("content")

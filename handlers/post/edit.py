@@ -1,10 +1,11 @@
 import time
-from helpers import Handler, post_exists, user_owns_post
+from helpers import Handler, post_exists, user_logged_in, user_owns_post
 
 
 class PostEditHandler(Handler):
     """Handles editing of a post"""
 
+    @user_logged_in
     @post_exists
     @user_owns_post
     def get(self, post_id, post, user):
@@ -14,6 +15,7 @@ class PostEditHandler(Handler):
                       post_id=post_id)
         return self.render("post-edit.html", **params)
 
+    @user_logged_in
     @post_exists
     @user_owns_post
     def post(self, post_id, post, user):

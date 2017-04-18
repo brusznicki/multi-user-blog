@@ -5,19 +5,22 @@ from google.appengine.ext import db
 def user_logged_in(function):
     """checks whether user is logged in"""
     @wraps(function)
-    def wrapper(self):
+    def wrapper(self, *args, **kwargs):
         if not self.user:
             self.error(403)
             return self.redirect("/")
         else:
-            return function(self)
+            kwargs["user"] = self.user
+            return function(self, *args, **kwargs)
     return wrapper
 
 
 def user_owns_comment(function):
     """Check that user owns comment"""
     @wraps(function)
-    def wrapper(self, comment_id, comment):
+    def wrapper(self, *args, **kwargs):
+        comment = kwargs["comment"]
+        user = kwargs["user"]
         if not comment:
             self.error(404)
             if self.request.referer:
@@ -26,11 +29,8 @@ def user_owns_comment(function):
                 self.redirect("/")
             return
         else:
-            if self.user.key() == comment.author.key():
-                return function(self,
-                                comment_id=comment_id,
-                                comment=comment,
-                                user=self.user)
+            if user.key() == comment.author.key():
+                return function(self, *args, **kwargs)
             else:
                 self.error(403)
                 return self.redirect("/%s" % comment.post.key().id())
@@ -41,7 +41,9 @@ def user_owns_comment(function):
 def user_owns_post(function):
     """Check that post exists and return error 403 if user owns post"""
     @wraps(function)
-    def wrapper(self, post_id, post):
+    def wrapper(self, *args, **kwargs):
+        post = kwargs['post']
+        post_id = post.key().id()
         if not post:
             self.error(404)
             if self.request.referer:
@@ -51,10 +53,8 @@ def user_owns_post(function):
             return
         else:
             if self.user.key() == post.author.key():
-                return function(self,
-                                post_id=post_id,
-                                post=post,
-                                user=self.user)
+                kwargs["user"] = self.user
+                return function(self, *args, **kwargs)
             else:
                 self.error(403)
                 return self.redirect("/%s" % post_id)
@@ -64,13 +64,13 @@ def user_owns_post(function):
 
 def comment_exists(function):
     @wraps(function)
-    def wrapper(self, comment_id):
+    def wrapper(self, *args, **kwargs):
+        comment_id = args[0]
         key = db.Key.from_path("Comment", int(comment_id))
         comment = db.get(key)
         if comment:
-            return function(self,
-                            comment_id=comment_id,
-                            comment=comment)
+            kwargs['comment'] = comment
+            return function(self, *args, **kwargs)
         else:
             self.error(404)
             return
@@ -79,13 +79,13 @@ def comment_exists(function):
 
 def post_exists(function):
     @wraps(function)
-    def wrapper(self, post_id):
+    def wrapper(self, *args, **kwargs):
+        post_id = args[0]
         key = db.Key.from_path("Post", int(post_id))
         post = db.get(key)
         if post:
-            return function(self,
-                            post_id=post_id,
-                            post=post)
+            kwargs['post'] = post
+            return function(self, *args, **kwargs)
         else:
             self.error(404)
             return

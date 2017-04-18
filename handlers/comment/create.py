@@ -1,16 +1,15 @@
 import time
-from helpers import Handler, post_exists
+from helpers import Handler, post_exists, user_logged_in
 from models.comment import Comment
 
 
 class CommentNewHandler(Handler):
     """Create a new comment for a blog post"""
 
+    @user_logged_in
     @post_exists
-    def post(self, post_id, post):
+    def post(self, post_id, post, user):
         """Create a comment if the user is logged in."""
-        if not self.user:
-            return self.redirect("/login")
         content = self.request.get("comment-content")
         if content:
             c = Comment(author=self.user,
